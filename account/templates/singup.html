@@ -1,0 +1,70 @@
+<!-- templates/signup.html -->
+{% extends 'base.html' %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+<h2>Sign up</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+</form>
+{% endblock %}
+{% block jquery %}
+<script type="text/javascript">
+$(document).ready(function() {
+    var time = [],
+        time2 = [],
+        keys = [],
+        field = $('#id_finger_printe'),
+        count = [],
+        timebetween = [];
+    $('#id_password1').on('keyup keypress', function(e) {
+        // if the event quale to keyup 
+        if (e.type == 'keyup') {
+            //the execute this
+            clearInterval(count);
+            time.push(timebetween);
+            localStorage.setItem('time', JSON.stringify(time));
+            field.val(time);
+        } else {
+            //else execute this
+            timebetween = 0;
+            count = setInterval(function() {
+                timebetween++;
+
+            }, 1);
+        }
+        /*the previuse code is about create a counter every time that the user 
+        press a key and create a timer for the keyup and keydone "keypress" and get 
+        the deffrent between them then save it in a list then save the list in
+        the browser cash
+        */
+    });
+    $('#id_password2').on('keyup keypress', function(e) {
+        // if the event quale to keyup 
+        if (e.type == 'keyup') {
+            //the execute this
+            clearInterval(count);
+            var output = $('#output');
+            output.text(timebetween + ' ms');
+            time.push(timebetween);
+            localStorage.setItem('time', JSON.stringify(time));
+            field.val(time);
+        } else {
+            //else execute this
+            timebetween = 0;
+            count = setInterval(function() {
+                timebetween++;
+
+            }, 1);
+        }
+        /*the previuse code is about create a counter every time that the user 
+        press a key and create a timer for the keyup and keydone "keypress" and get 
+        the deffrent between them then save it in a list then save the list in
+        the browser cash
+        */
+    });
+    console.log(time)
+});
+</script>
+{% endblock jquery %}
