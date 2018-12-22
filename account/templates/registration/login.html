@@ -14,82 +14,84 @@ var time = [],
     count = [],
     ob,
     timebetween = [];
-$(':button[type="submit"]').prop('disabled', true);
-$("#id_username").change(function() {
-    var username = $(this).val();
-    var form = $(this).closest("form");
-    $.ajax({
-        url: form.attr("data-validate-username-url"),
-        data: form.serialize(),
-        dataType: 'json',
-        success: function(data) {
-            const obj = data.genres[0]
-            ob = obj.finger_printe
-            console.log(ob)
+var dilog = confirm('do you want to use keystroke authentication');
+if (dilog) {
+    $(':button[type="submit"]').prop('disabled', true);
+    $("#id_username").change(function() {
+        var username = $(this).val();
+        var form = $(this).closest("form");
+        $.ajax({
+            url: form.attr("data-validate-username-url"),
+            data: form.serialize(),
+            dataType: 'json',
+            success: function(data) {
+                const obj = data.genres[0]
+                ob = obj.finger_printe
+                console.log(ob)
+            }
+
+        })
+
+    });
+
+
+    $('#id_password').on('keyup keypress', function(e) {
+        // if the event quale to keyup 
+        if (e.type == 'keyup') {
+            //the execute this
+            clearInterval(count);
+            time.push(timebetween);
+            localStorage.setItem('time', JSON.stringify(time));
+
+        } else {
+            //else execute this
+            timebetween = 0;
+            count = setInterval(function() {
+                timebetween++;
+
+            }, 1);
         }
+        /*the previuse code is about create a counter every time that the user 
+        press a key and create a timer for the keyup and keydone "keypress" and get 
+        the deffrent between them then save it in a list then save the list in
+        the browser cash
+        */
+    });
 
-    })
-
-});
-
-
-$('#id_password').on('keyup keypress', function(e) {
-    // if the event quale to keyup 
-    if (e.type == 'keyup') {
-        //the execute this
-        clearInterval(count);
-        time.push(timebetween);
-        localStorage.setItem('time', JSON.stringify(time));
-
-    } else {
-        //else execute this
-        timebetween = 0;
-        count = setInterval(function() {
-            timebetween++;
-
-        }, 1);
-    }
-    /*the previuse code is about create a counter every time that the user 
-    press a key and create a timer for the keyup and keydone "keypress" and get 
-    the deffrent between them then save it in a list then save the list in
-    the browser cash
-    */
-});
-
-function listCompare(list1, list2) {
-    let result = 0;
-    let final = (list1.length + list2.length) / 2;
-    for (let x of list1) {
-        for (let y of list2) {
-            if (x == y) {
-                result += 1;
+    function listCompare(list1, list2) {
+        let result = 0;
+        let final = (list1.length + list2.length) / 2;
+        for (let x of list1) {
+            for (let y of list2) {
+                if (x == y) {
+                    result += 1;
+                }
             }
         }
-    }
-    return (result / final * 100);
-}
-
-$('#id_password').change(function() {
-    ls1 = time
-    var array = ob.split(",").map(Number);
-    ls2 = array
-    var result = listCompare(ls1, ls2)
-    if (result >= 50.0) {
-        $(':button[type="submit"]').prop('disabled', false);
-        clear()
-    } else if (result <= 30.0) {
-        $(':button[type="submit"]').prop('disabled', true);
-        clear()
-    } else {
-        $(':button[type="submit"]').prop('disabled', true);
-        clear()
+        return (result / final * 100);
     }
 
-});
+    $('#id_password').change(function() {
+        ls1 = time
+        var array = ob.split(",").map(Number);
+        ls2 = array
+        var result = listCompare(ls1, ls2)
+        if (result >= 50.0) {
+            $(':button[type="submit"]').prop('disabled', false);
+            clear()
+        } else if (result <= 30.0) {
+            $(':button[type="submit"]').prop('disabled', true);
+            clear()
+        } else {
+            $(':button[type="submit"]').prop('disabled', true);
+            clear()
+        }
 
-function clear() {
-    time = [];
-    ob = null;
+    });
+
+    function clear() {
+        time = [];
+    }
 }
 </script>
 {% endblock jquery %}
